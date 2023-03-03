@@ -4,7 +4,8 @@ const products = require('./products.json');
 
 app.get('/products', async (req, res) => {
     try {
-        res.send({products});
+        const { limit } = req.query;
+        res.send(products.slice(0, limit));
     } catch(err) {
         console.error(`Ocurrió un error al obtener los productos. exception: ${err}`)
     }
