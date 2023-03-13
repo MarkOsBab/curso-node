@@ -34,10 +34,10 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-router.post("/", uploader.single("thumbnail"), async (req, res) => {
+router.post("/", uploader.array("thumbnails", 3), async (req, res) => {
     try {
-        const filename = req.file.filename;
-        if(!filename) {
+        const thumbnails = req.files ? req.files.map(file => `${URL}${file.filename}`) : null;
+        if(!thumbnails) {
             return res
                 .status(400)
                 .send({status: `Error`, error: `No se pudo cargar ningún archivo.`});
@@ -51,7 +51,7 @@ router.post("/", uploader.single("thumbnail"), async (req, res) => {
             code: req.body.code,
             stock: req.body.stock,
             category: req.body.category,
-            thumbnail: [URL+filename],
+            thumbnails: thumbnails,
         };
 
         if (products.length === 0) {
@@ -66,7 +66,7 @@ router.post("/", uploader.single("thumbnail"), async (req, res) => {
         product.id = lastProduct.id + 1;
         }
 
-        if(!product.title || !product.description || !product.price || !product.status || !product.code || !product.thumbnail || !product.stock || !product.category) {
+        if(!product.title || !product.description || !product.price || !product.status || !product.code || !product.thumbnails || !product.stock || !product.category) {
             return res
                 .status(400)
                 .send({status: `Error`, error: `Debes ingresar todos campos para ingresar un nuevo producto.`});
@@ -89,7 +89,7 @@ router.post("/", uploader.single("thumbnail"), async (req, res) => {
     }
 });
 
-router.put("/:id", uploader.single("thumbnail"), async (req, res) => {
+router.put("/:id", uploader.array("thumbnails", 3), async (req, res) => {
     try {
         const id = parseInt(req.params.id);
         const product = products.find((p) => p.id === id);
@@ -100,8 +100,8 @@ router.put("/:id", uploader.single("thumbnail"), async (req, res) => {
                 .send({status: `Error`, error: `No se encontró el producto con el id #${id}`});
         }
 
-        const filename = req.file ? req.file.filename : null;
-        
+        const thumbnails = req.files ? req.files.map(file => `${URL}${file.filename}`) : null;
+
         const uploadProduct = {
             id: product.id,
             title: req.body.title,
@@ -111,22 +111,21 @@ router.put("/:id", uploader.single("thumbnail"), async (req, res) => {
             code: req.body.code,
             stock: req.body.stock,
             category: req.body.category,
-            thumbnail: [URL+filename],
         };
 
-        if(!uploadProduct.title || !uploadProduct.description || !uploadProduct.price || !uploadProduct.status || !uploadProduct.code || !uploadProduct.thumbnail || !uploadProduct.stock || !uploadProduct.category) {
+        if(!uploadProduct.title || !uploadProduct.description || !uploadProduct.price || !uploadProduct.status || !uploadProduct.code || !uploadProduct.stock || !uploadProduct.category) {
             return res
                 .status(400)
                 .send({status: `Error`, error: `Debes ingresar todos campos para ingresar un nuevo producto.`});
         }
 
-        if(products.some(p => p.code === uploadProduct.code)) {
+        if(products.some(p => p.code === uploadProduct.code && p.id !== id)) {
             return res
                 .status(400)
                 .send({status: `Error`, error: `El código ingresado ya existe.`});
         }
 
-        productManager.updateProduct(uploadProduct, id);
+        productManager.updateProduct(uploadProduct, id, thumbnails);
         return res
             .status(200)
             .send({status: `Success`, response: `Producto actualizado.`});

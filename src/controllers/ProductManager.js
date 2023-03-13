@@ -27,7 +27,9 @@ export default class ProductManager {
     listProducts = async () => {
         try {
             const products = await this.getProductsFromFile();
-            return products;
+            return products.map((product) => ({
+                ...product
+            }));
         } catch(err) {
             return `Hubo un error al obtener los productos. Exception: ${err}`;
         }
@@ -70,32 +72,33 @@ export default class ProductManager {
         }
     }
 
-    updateProduct = async(product, id) => {
+    updateProduct = async (product, id, thumbnails) => {
         try {
             const products = await this.getProductsFromFile();
-            if(!fs.existsSync(this.path))
-            {
-                return `Ocurrió un error al obtener el archivo de productos.`;
+            const index = products.findIndex((p) => p.id === id);
+    
+            if(index === -1) {
+                return console.error(`No se encontró el producto con el id #${id}`);
             }
-            let productToUpdate = products.find((p) => p.id === id);
-
+    
             let modifiedProduct = {
-                title: product.title || productToUpdate.code,
-                description: product.description || productToUpdate.description,
-                price: product.price || productToUpdate.price,
-                status: product.status || productToUpdate.status,
-                code: product.code || productToUpdate.code,
-                thumbnail: product.thumbnail || productToUpdate.thumbnail,
-                stock: product.stock || productToUpdate.stock,
-                category: product.category || productToUpdate.category,
-                id: productToUpdate.id,
+                title: product.title || products[index].title,
+                description: product.description || products[index].description,
+                price: product.price || products[index].price,
+                status: product.status || products[index].status,
+                code: product.code || products[index].code,
+                thumbnails: thumbnails ? [...products[index].thumbnails, ...thumbnails] : products[index].thumbnails,
+                stock: product.stock || products[index].stock,
+                category: product.category || products[index].category,
+                id: products[index].id,
             };
 
             products[index] = modifiedProduct;
-            this.writeProductsFile(products);
+            await this.writeProductsFile(products);
             return products;
         } catch(err) {
-            return `Hubo un error al actualizar el producto. Exception: ${err}`;
+            return console.error(`Hubo un error al actualizar el producto. Exception: ${err}`);
         }
     }
+
 }
