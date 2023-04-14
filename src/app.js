@@ -7,6 +7,7 @@ dotenv.config();
 
 import viewsRouter from './routes/views.router.js';
 import productRouter from './routes/products.router.js';
+import cartRouter from './routes/carts.router.js';
 
 const app = express();
 
@@ -34,3 +35,4 @@ app.set("view engine", "handlebars");
 
 app.use("/", viewsRouter);
 app.use("/api/products", productRouter);
+app.use("/api/carts", cartRouter);
