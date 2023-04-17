@@ -1,15 +1,34 @@
 import { productModel } from '../models/product.model.js';
+import fs from "fs";
 
 export default class ProductManager {
     constructor(){}
 
-    findAll = async () => {
+    findAll = async (page, filters = {}, options = {}) => {
         try {
-            return await productModel.find();
+          const { limit = 10 } = options;
+      
+          const query = {};
+      
+          if ('category' in filters) {
+            query.category = filters.category;
+          }
+      
+          if ('status' in filters) {
+            query.status = filters.status;
+          }
+      
+          const result = await productModel.paginate(query, {
+            ...options,
+            page: page,
+            limit: parseInt(limit),
+          });
+      
+          return result;
         } catch (error) {
-            return {error: err.message};
+          return { error: error.message };
         }
-    }
+      };        
 
     findOne = async (id) => {
         try {
@@ -34,8 +53,8 @@ export default class ProductManager {
                 product.stock === undefined ||
                 !product.category
               ) {
-                return { error: "Debes ingresar todos los campos para actualizar el producto." };
-              }        
+                return { error: "Debes ingresar todos los campos para crear el producto." };
+              }
             const products = await productModel.find();
             if(products.some(p => p.code === product.code)) {
                 return {error: `El código ingresado ya existe.`};

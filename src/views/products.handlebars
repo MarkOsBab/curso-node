@@ -1,0 +1,41 @@
+<div class="container-fluid">
+    <h1>Lista de productos</h1>
+    <div class="d-flex flex-wrap">
+        {{#each payload}}
+                <div class="card" style="max-width: 13rem;">
+                    <a href="/product/{{_id}}" style="text-decoration: none;" class="text-dark">
+                        <div class="card-header">
+                            {{#each thumbnails}}
+                                <img src="{{this}}" alt="product-image" class="card-img-top">
+                            {{/each}}
+                        </div>
+                        <div class="card-body">
+                            <h3>{{this.title}}</h3>
+                            <p>{{this.description}}</p>
+                        </div>
+                    </a>
+                    <div class="card-footer">
+                        <h4>${{this.price}}</h4>
+                        <div class="d-flex flex-row align-items-center">
+                            <div class="col-8">
+                                <small class="text-muted">Stock: {{this.stock}}</small>
+                            </div>
+                            <div class="col-4">
+                                <button class="btn btn-primary" onclick="addToCart('{{this._id}}', 1)"><i class="fa-solid fa-cart-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        {{/each}}
+    </div>
+    {{#if hasPrevPage}}
+        <a href="/products?page={{prevPage}}"><button>Anterior</button></a>
+    {{/if}}
+
+    <p>{{page}}</p>
+
+    {{#if hasNextPage}}
+        <a href="/products?page={{nextPage}}"><button>Siguiente</button></a>
+    {{/if}}
+</div>
+<script src="js/index.js"></script>

@@ -51,7 +51,7 @@ router.post("/", async (req, res) => {
         }
         res
             .status(200)
-            .send({status: `Success`, payload: "Carrito creado"});
+            .send({status: `Success`, payload: {id: result._id, message: "Carrito creado"}});
     } catch (error) {
         return res
             .status(500)
