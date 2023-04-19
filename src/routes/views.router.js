@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import ProductManager from "../dao/dbManagers/ProductManager.js";
+import CartManager from "../dao/dbManagers/CartManager.js";
 
 const router = Router();
 const productManager = new ProductManager();
+const cartManager = new CartManager();
 
 router.get("/products", async (req, res) => {
     const { limit = 10, page = 1, query = "{}", sort = null } = req.query;
@@ -45,6 +47,15 @@ router.get("/product/:productId", async(req, res) => {
     res.render("product", {
         product: JSON.parse(JSON.stringify(product))
     });
+});
+
+router.get("/cart/:cartId", async(req, res) => {
+  const { cartId } = req.params;
+  const cart = await cartManager.findOne(cartId);
+  console.log(cart.products);
+  res.render("cart", {
+    cart: JSON.parse(JSON.stringify(cart.products))
+  });
 });
 
 export default router;

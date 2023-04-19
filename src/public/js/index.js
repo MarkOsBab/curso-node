@@ -1,22 +1,14 @@
 const addToCart = async (productId, quantity) => {
-    console.log(quantity);
-    await fetch('http://localhost:8080/api/carts', {method: 'POST'})
+    await fetch(`http://localhost:8080/api/carts/64402b52bbb97ea38e69902c/products/${productId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ quantity })
+        })
         .then((cart) => cart.json())
-        .then(async (data) => {
-            await fetch(`http://localhost:8080/api/carts/${data.payload.id}/products/${productId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ quantity })
-                })
-                .then((cart) => cart.json())
-                .then((data) => {
-                    console.log(data);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
+        .then((data) => {
+            alertify.alert('Listo!', `${data.payload}`, function(){ alertify.success(`${data.payload}`); });
         })
         .catch((error) => {
             console.log(error);

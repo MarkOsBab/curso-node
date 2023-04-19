@@ -40,13 +40,14 @@ export default class CartManager {
             const cart = await cartModel.findOne({ _id: cartId });
             const parsedQuantity = Number(quantity);
             if (isNaN(parsedQuantity)) {
-            return { error: `La cantidad ingresada no es válida.` };
+                return { error: `La cantidad ingresada no es válida.` };
             }
             if (!cart) {
                 return { error: `No se encontró el carrito.` };
             }
+
             const existingProductIndex = cart.products.findIndex(
-                (product) => product.product && product.product.toString() === productId
+                (product) => product.product && product.product._id.toString() === productId
             );
               
             if (existingProductIndex !== -1) {
