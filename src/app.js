@@ -1,33 +1,37 @@
 import express from "express";
 import __dirname from './utils.js';
 import handlebars from 'express-handlebars';
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-dotenv.config();
-
+import database from './db.js';
+import morgan from "morgan";
+import session from "express-session";
+import MongoStore from "connect-mongo";
 import viewsRouter from './routes/views.router.js';
 import productRouter from './routes/products.router.js';
 import cartRouter from './routes/carts.router.js';
+import sessionRouter from './routes/sessions.router.js';
+import config from "./config.js";
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use("/", express.static(`${__dirname}/public`));
+app.use(morgan("dev"));
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl: config.dbUrl,
+        ttl: 120,
+    }),
+    resave: false,
+    saveUninitialized: false,
+    secret: "skadhugs8237"
+}));
 
-const dbUser = process.env.DB_USER;
-const dbPassword = process.env.DB_PASSWORD;
-const dbUrl = process.env.DB_URL;
-const dbName = process.env.DB_NAME;
-const port = process.env.PORT;
-
-const httpServer = app.listen(port, () => {
-    console.log(`Server runing at port ${port}`);
+const httpServer = app.listen(8080, () => {
+    console.log(`Server runing at port 8080`);
 });
 
-mongoose.connect(
-    `mongodb+srv://${dbUser}:${dbPassword}@${dbUrl}/${dbName}?retryWrites=true&w=majority`
-);
+database.connect();
 
 app.engine("handlebars", handlebars.engine());
 app.set("views", `${__dirname}/views`);
@@ -36,3 +40,4 @@ app.set("view engine", "handlebars");
 app.use("/", viewsRouter);
 app.use("/api/products", productRouter);
 app.use("/api/carts", cartRouter);
+app.use("/api/sessions", sessionRouter);

@@ -1,10 +1,9 @@
-const addToCart = async (productId, quantity) => {
+const addToCart = async (productId) => {
     await fetch(`http://localhost:8080/api/carts/64402b52bbb97ea38e69902c/products/${productId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ quantity })
+        }
         })
         .then((cart) => cart.json())
         .then((data) => {

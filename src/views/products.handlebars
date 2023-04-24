@@ -1,5 +1,8 @@
 <div class="container-fluid">
     <h1>Lista de productos</h1>
+    {{#if user}}
+        <h3 class="text-muted">Bienvenido {{user.name}}</h3>
+    {{/if}}
     <div class="d-flex flex-wrap">
         {{#each payload}}
                 <div class="card" style="max-width: 13rem;">
@@ -21,7 +24,7 @@
                                 <small class="text-muted">Stock: {{this.stock}}</small>
                             </div>
                             <div class="col-4">
-                                <button class="btn btn-primary" onclick="addToCart('{{this._id}}', 1)"><i class="fa-solid fa-cart-plus"></i></button>
+                                <button class="btn btn-primary" onclick="addToCart('{{this._id}}')"><i class="fa-solid fa-cart-plus"></i></button>
                             </div>
                         </div>
                     </div>

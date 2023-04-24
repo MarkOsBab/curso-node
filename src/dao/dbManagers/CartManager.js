@@ -35,7 +35,7 @@ export default class CartManager {
         }
     };
 
-    createCartProduct = async (cartId, productId, quantity) => {
+    createCartProduct = async (cartId, productId, quantity = 1) => {
         try {
             const cart = await cartModel.findOne({ _id: cartId });
             const parsedQuantity = Number(quantity);

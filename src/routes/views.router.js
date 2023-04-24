@@ -35,7 +35,8 @@ router.get("/products", async (req, res) => {
         hasPrevPage,
         hasNextPage,
         prevLink,
-        nextLink
+        nextLink,
+        user: req.session.user
       });
     
 });
@@ -52,10 +53,21 @@ router.get("/product/:productId", async(req, res) => {
 router.get("/cart/:cartId", async(req, res) => {
   const { cartId } = req.params;
   const cart = await cartManager.findOne(cartId);
-  console.log(cart.products);
   res.render("cart", {
     cart: JSON.parse(JSON.stringify(cart.products))
   });
+});
+
+router.get("/register", (req, res) => {
+  res.render("register");
+});
+
+router.get("/login", (req, res) => {
+  res.render("login");
+});
+
+router.get("/profile", (req, res) => {
+    res.render("profile", { user: req.session.user });
 });
 
 export default router;
