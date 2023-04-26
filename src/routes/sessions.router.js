@@ -1,5 +1,7 @@
 import { Router } from "express";
 import userModel from "./../dao/models/user.model.js";
+import { isValidPassword, createHash } from "../utils.js";
+import passport from "passport";
 
 const router = Router();
 
@@ -14,12 +16,19 @@ router.post("/login", async (req, res) => {
                 rol: "admin"
             }
         } else {
-            const user = await userModel.findOne({email, password});
+            const user = await userModel.findOne({email});
             if(!user) {
-                res
+                return res
                     .status(400)
                     .send({status: "error", error: "Usuario no encontrado."});
             }
+
+            if(!isValidPassword(user, password)) {
+                return res
+                    .status(401)
+                    .send({status: "error", error: "Contraseña incorrecta."});
+            }
+
             req.session.user = {
                 name: `${user.first_name} ${user.last_name}`,
                 email: user.email,
@@ -49,7 +58,7 @@ router.post("/register", async (req, res) => {
             last_name, 
             email, 
             age, 
-            password 
+            password: createHash(password),
         };
 
         await userModel.create(user);
@@ -77,5 +86,25 @@ router.post("/logout", async (req, res) => {
             .send({status: "error", error: error});
     }
 });
+
+router.get(
+    "/github", 
+    passport.authenticate("github", {scope: ["user:email"]}),
+    async (req, res) => {}
+);
+
+router.get(
+    "/githubcallback",
+    passport.authenticate("github", {failureRedirect: "/login"}),
+    async (req, res) => {
+        req.session.user = {
+            name: `${req.user.first_name} ${req.user.last_name}`,
+            email: req.user.email,
+            age: req.user.age,
+            rol: "user",
+        }
+        res.redirect("/products");
+    }
+);
 
 export default router;
