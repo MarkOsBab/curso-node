@@ -1,73 +1,40 @@
 import { Router } from "express";
 import userModel from "./../dao/models/user.model.js";
-import { isValidPassword, createHash } from "../utils.js";
+import { isValidPassword } from "../utils.js";
 import passport from "passport";
 
 const router = Router();
 
-router.post("/login", async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        if(email === "adminCoder@coder.com" && password === "adminCod3r123") {
-            req.session.user = {
-                name: `Admin Coder`,
-                email: email,
-                age: null,
-                rol: "admin"
-            }
-        } else {
-            const user = await userModel.findOne({email});
-            if(!user) {
-                return res
-                    .status(400)
-                    .send({status: "error", error: "Usuario no encontrado."});
-            }
+router.post(
+    "/login", 
+    passport.authenticate("login", 
+    { failureRedirect: "/api/sessions/failLogin" }), 
+    async (req, res) => {
+    req.session.user = {
+        name: `${req.user.first_name} ${req.user.last_name}`,
+        email: req.user.email,
+        age: req.user.age,
+        rol: req.user.role,
+        cart: req.user.cartId
+    };
+    console.log(req.session.user);
+    return res.send({status: "success", payload: req.session.user});
 
-            if(!isValidPassword(user, password)) {
-                return res
-                    .status(401)
-                    .send({status: "error", error: "Contraseña incorrecta."});
-            }
+});
+router.get("/failLogin", (req, res) => {
+    res.send({status: "error", error: "Invalid credentials"});
+})
 
-            req.session.user = {
-                name: `${user.first_name} ${user.last_name}`,
-                email: user.email,
-                age: user.age,
-                rol: "user",
-            }
-        }
-        return res.send({status: "success", payload: req.session.user});
-    } catch (error) {
-        res
-            .status(500)
-            .send({status: "error", error: error});
-    }
+router.post(
+    "/register", 
+    passport.authenticate("register", 
+    { failureRedirect: "/api/sessions/failRegister" }
+    ), async (req, res) => {
+    return res.send({status: "success", payload: "Usuario creado."});
 });
 
-router.post("/register", async (req, res) => {
-    try {
-        const { first_name, last_name, email, age, password } = req.body;
-        const userExists = await userModel.findOne({email});
-        if(userExists) {
-            return res
-                .status(400)
-                .send({status: "error", error: "El usuario ya se encuentra registrado."});
-        }
-        const user = { 
-            first_name, 
-            last_name, 
-            email, 
-            age, 
-            password: createHash(password),
-        };
-
-        await userModel.create(user);
-        return res.send({status: "success", payload: "Usuario creado."});
-    } catch (error) {
-        res
-            .status(500)
-            .send({status: "error", error: error});
-    }
+router.get("/failRegister", (req, res) => {
+    return res.send({status: "error", message: "User already exists"});
 });
 
 router.post("/logout", async (req, res) => {
@@ -85,6 +52,10 @@ router.post("/logout", async (req, res) => {
             .status(500)
             .send({status: "error", error: error});
     }
+});
+
+router.get("/current", (req, res) => {
+    return res.send({payload: req.session.user});
 });
 
 router.get(
