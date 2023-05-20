@@ -1,4 +1,5 @@
 import { productService } from "../dao/services/products.service.js";
+import { apiResponser } from "../traits/ApiResponser.js";
 const URL = "http://localhost:8080/images/";
 
 export async function findAll (req, res) {
@@ -24,24 +25,24 @@ export async function findAll (req, res) {
       const nextLink = nextPage ? `/products?limit=${limit}&page=${nextPage}&query=${query}&sort=${sort}` : null;
       const payload = result.docs;
       if (result && result.error) {
-        return res
-          .status(400)
-          .send({ status: 'Error', error: result.error });
+        return apiResponser.errorResponse(res, result.error, 400); 
       }
-      res.send({
-        status: 'success',
-        payload,
-        totalPages,
-        prevPage,
-        nextPage,
-        page,
-        hasPrevPage,
-        hasNextPage,
-        prevLink,
-        nextLink,
-      });
+      return apiResponser.successResponse(
+        res, 
+        {
+          payload,
+          totalPages,
+          prevPage,
+          nextPage,
+          page,
+          hasPrevPage,
+          hasNextPage,
+          prevLink,
+          nextLink
+        }
+      );
     } catch (error) {
-      return res.status(500).send(error);
+      return apiResponser.errorResponse(res, error);
     }
 };
 
@@ -50,12 +51,12 @@ export async function findOne(req, res) {
         const { productId } = req.params;
         const result = await productService.findOne(productId);
         if(result && result.error) {
-            return res.status(400).send({status: `Error`, error: result.error});
+            return apiResponser.errorResponse(res, result.error, 400);
         }
 
-        return res.status(200).send({status: `Success`, payload: result});
+        return apiResponser.successResponse(res, result);
     } catch (error) {
-        return res.status(500).send(error);
+        return apiResponser.errorResponse(res, error);
     }
 };
 
@@ -65,22 +66,20 @@ export async function createProduct(req, res) {
     const thumbnails = req.files ? req.files.map(file => `${URL}${file.filename}`) : null;
 
     if (!thumbnails || thumbnails.length === 0) {
-      return res
-        .status(400)
-        .send({ status: 'Error', error: 'No se cargaron imágenes.' });
+      return apiResponser.errorResponse(res, `No se cargaron imágenes.`, 400);
     }
 
     product.thumbnails = thumbnails;
 
     const result = await productService.addProduct(product);
     if (result && result.error) {
-      return res.status(400).send({ status: 'Error', error: result.error });
+      return apiResponser.errorResponse(res, result.error, 400);
     }
 
-    res.status(200).send({ status: 'Success', payload: 'Producto creado' });
+    return apiResponser.successResponse(res, `Producto creado`);
 
   } catch (error) {
-    return res.status(500).send({ status: 'Error', error: error.message });
+    return apiResponser.errorResponse(res, error);
   }
 };
 
@@ -91,13 +90,13 @@ export async function updateProduct(req, res) {
 
     const result = await productService.updateProduct(productId, product);
     if(result && result.error) {
-      return res.status(400).send({status: `Error`, error: result.error});
+      return apiResponser.errorResponse(res, result.error, 400);
     }
 
-    return res.status(200).send({ status: 'success', payload: "Producto actualizado." });
+    return apiResponser.successResponse(res, result);
 
   } catch (error) {
-    res.status(500).send(error);
+    return apiResponser.errorResponse(res, error);
   }
 };
 
@@ -107,12 +106,12 @@ export async function deleteProduct(req, res) {
     
     const result = await productService.deleteProduct(productId);
     if(result && result.error) {
-      return res.status(400).send({status: `Error`, error: result.error});
+      return apiResponser.errorResponse(res, result.error, 400);
     }
 
-    return res.status(200).send({ status: 'success', payload: "Producto eliminado." });
+    return apiResponser.successResponse(res, `Producto eliminado`);
 
   } catch (error) {
-    res.status(500).send(error);
+    return apiResponser.errorResponse(res, error);
   }
 }

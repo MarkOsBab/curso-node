@@ -32,11 +32,19 @@ class ProductRepository {
     };
 
     findOne = async (id) => {
-        return await productModel.findById(id);
+        try {
+          return await productModel.findById(id);
+        } catch (error) {
+          throw new Error(error.message);
+        }
     };
 
     addProduct = async (product) => {
-      return await productModel.create(product);
+      try {
+        return await productModel.create(product);
+      } catch (error) {
+        throw new Error(error.message);
+      }
     };
 
     findByCode = async (code) => {
@@ -48,11 +56,19 @@ class ProductRepository {
     };
 
     updateProduct = async (id, product) => {
-      return await productModel.updateOne({_id: id}, product);
+      try {
+        return await productModel.updateOne({_id: id}, product);
+      } catch (error) {
+        throw new Error(error.message);
+      }
     };
 
     deleteProduct = async (id) => {
-      return await productModel.deleteOne({_id: id});
+      try {
+        return await productModel.deleteOne({_id: id});
+      } catch (error) {
+        throw new Error(error.message);
+      }
     };
 }
 

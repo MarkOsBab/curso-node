@@ -15,7 +15,11 @@ class ProductService {
 
     findOne = async (id) => {
         try {
-            return await this.productRepository.findOne(id);
+            const result = await this.productRepository.findOne(id);
+            if(!result) {
+                return { error: 'Producto no encontrado.' };
+            }
+            return 
         } catch (error) {
             throw new Error(error.message);
         }
