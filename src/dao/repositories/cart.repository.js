@@ -9,7 +9,7 @@ class CartRepository {
        try {
         return this.model.find();
        } catch (error) {
-        throw new Error(error.message);
+        throw new Error(error);
        }
     };
 
@@ -17,7 +17,7 @@ class CartRepository {
         try {
             return this.model.findById(id);
         } catch (error) {
-            throw new Error(error.message);
+            throw new Error(error);
         }
     }
 
@@ -25,7 +25,15 @@ class CartRepository {
         try {
             return this.model.create(cart);
         } catch (error) {
-            throw new Error(error.message);
+            throw new Error(error);
+        }
+    }
+
+    saveCart = async (cart) => {
+        try {
+            return await cart.save();
+        } catch (error) {
+            throw new Error(error);
         }
     }
 }

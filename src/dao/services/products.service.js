@@ -9,7 +9,7 @@ class ProductService {
         try {
           return await this.productRepository.findAll(page, filters, options);
         } catch (error) {
-          throw new Error(error.message);
+          throw new Error(error);
         }
     };
 
@@ -21,7 +21,7 @@ class ProductService {
             }
             return 
         } catch (error) {
-            throw new Error(error.message);
+            throw new Error(error);
         }
     };
 
@@ -47,7 +47,7 @@ class ProductService {
             return await this.productRepository.addProduct(product);
 
         } catch (error) {
-            throw new Error(error.message);
+            throw new Error(error);
         }
     };
 
@@ -77,7 +77,7 @@ class ProductService {
 
             return await productRepository.updateProduct(id, product);
         } catch (error) {
-            throw new Error(error.message);
+            throw new Error(error);
         }
     };
 
@@ -90,7 +90,7 @@ class ProductService {
 
             return await productRepository.deleteProduct(id);
         } catch (error) {
-            throw new Error(error.message);
+            throw new Error(error);
         }
     };
 }

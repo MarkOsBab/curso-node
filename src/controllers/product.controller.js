@@ -42,7 +42,7 @@ export async function findAll (req, res) {
         }
       );
     } catch (error) {
-      return apiResponser.errorResponse(res, error);
+      return apiResponser.errorResponse(res, error.message);
     }
 };
 
@@ -56,7 +56,7 @@ export async function findOne(req, res) {
 
         return apiResponser.successResponse(res, result);
     } catch (error) {
-        return apiResponser.errorResponse(res, error);
+        return apiResponser.errorResponse(res, error.message);
     }
 };
 
@@ -79,7 +79,7 @@ export async function createProduct(req, res) {
     return apiResponser.successResponse(res, `Producto creado`);
 
   } catch (error) {
-    return apiResponser.errorResponse(res, error);
+    return apiResponser.errorResponse(res, error.message);
   }
 };
 
@@ -96,7 +96,7 @@ export async function updateProduct(req, res) {
     return apiResponser.successResponse(res, result);
 
   } catch (error) {
-    return apiResponser.errorResponse(res, error);
+    return apiResponser.errorResponse(res, error.message);
   }
 };
 
@@ -112,6 +112,6 @@ export async function deleteProduct(req, res) {
     return apiResponser.successResponse(res, `Producto eliminado`);
 
   } catch (error) {
-    return apiResponser.errorResponse(res, error);
+    return apiResponser.errorResponse(res, error.message);
   }
 }

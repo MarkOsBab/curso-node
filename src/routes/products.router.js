@@ -6,13 +6,9 @@ import { findAll, findOne, createProduct, updateProduct, deleteProduct } from '.
 const router = Router();
 
 router.get('/', findAll);
-  
 router.get('/:productId', findOne);
-
 router.post('/', uploader.array('thumbnails'), createProduct);
-
 router.put('/:productId', updateProduct);
-
 router.delete('/:productId', deleteProduct);
 
 export default router;

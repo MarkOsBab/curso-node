@@ -27,7 +27,7 @@ class ProductRepository {
     
           return result;
         } catch (error) {
-          throw new Error(error.message);
+          throw new Error(error);
         }
     };
 
@@ -35,7 +35,7 @@ class ProductRepository {
         try {
           return await productModel.findById(id);
         } catch (error) {
-          throw new Error(error.message);
+          throw new Error(error);
         }
     };
 
@@ -43,7 +43,7 @@ class ProductRepository {
       try {
         return await productModel.create(product);
       } catch (error) {
-        throw new Error(error.message);
+        throw new Error(error);
       }
     };
 
@@ -51,7 +51,7 @@ class ProductRepository {
       try {
         return await productModel.findOne({ code });
       } catch (error) {
-        throw new Error(error.message);
+        throw new Error(error);
       }
     };
 
@@ -59,15 +59,7 @@ class ProductRepository {
       try {
         return await productModel.updateOne({_id: id}, product);
       } catch (error) {
-        throw new Error(error.message);
-      }
-    };
-
-    deleteProduct = async (id) => {
-      try {
-        return await productModel.deleteOne({_id: id});
-      } catch (error) {
-        throw new Error(error.message);
+        throw new Error(error);
       }
     };
 }
