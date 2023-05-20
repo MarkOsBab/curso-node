@@ -2,74 +2,15 @@ import { Router } from "express";
 import { uploader } from './../utils.js';
 import __dirname from "./../utils.js";
 import ProductManager from "../dao/dbManagers/ProductManager.js";
+import { findAll, findOne } from './../controllers/product.controller.js';
 
 const router = Router();
 const productManager = new ProductManager();
 const URL = "http://localhost:8080/images/";
 
-router.get("/", async (req, res) => {
-    try {
-      const { limit = 10, page = 1, query = "{}", sort = null } = req.query;
+router.get('/', findAll);
   
-      const { category, status } = JSON.parse(query);
-  
-      const filters = {};
-      if (category) filters.category = category;
-      if (status) filters.status = status;
-  
-      const options = { limit, page };
-      if (sort) options.sort = sort;
-  
-      const result = await productManager.findAll(page, filters, options);
-      const totalPages = result.totalPages;
-      const prevPage = result.hasPrevPage ? result.prevPage : null;
-      const nextPage = result.hasNextPage ? result.nextPage : null;
-      const hasPrevPage = result.hasPrevPage;
-      const hasNextPage = result.hasNextPage;
-      const prevLink = prevPage ? `/products?limit=${limit}&page=${prevPage}&query=${query}&sort=${sort}` : null;
-      const nextLink = nextPage ? `/products?limit=${limit}&page=${nextPage}&query=${query}&sort=${sort}` : null;
-      const payload = result.docs;
-      if (result && result.error) {
-        return res
-          .status(400)
-          .send({ status: `Error`, error: result.error });
-      }
-      res.send({
-        status: "success",
-        payload,
-        totalPages,
-        prevPage,
-        nextPage,
-        page,
-        hasPrevPage,
-        hasNextPage,
-        prevLink,
-        nextLink,
-      });
-    } catch (error) {
-      return res.status(500).send(error);
-    }
-  });
-  
-  
-router.get("/:productId", async (req, res) => {
-    try {
-        const { productId } = req.params;
-        const result = await productManager.findOne(productId);
-        if(result && result.error) {
-            return res
-                .status(400)
-                .send({status: `Error`, error: result.error});
-        }
-        return res
-            .status(200)
-            .send({ status: 'success', payload: result });
-    } catch (error) {
-        return res
-            .status(500)
-            .send(error);
-    }
-});
+router.get('/:productId', findOne);
 
 
 router.post("/", uploader.array('thumbnails'), async (req, res) => {
