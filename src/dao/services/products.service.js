@@ -20,6 +20,75 @@ class ProductService {
             throw new Error(error.message);
         }
     };
+
+    addProduct = async (product) => {
+        try {
+            if (
+                !product.title ||
+                !product.description ||
+                product.price === undefined ||
+                product.status === undefined ||
+                !product.code ||
+                product.stock === undefined ||
+                !product.category
+            ) {
+                return { error: 'Debes ingresar todos los campos para crear el producto.' };
+            }
+
+            const existingProduct = await this.productRepository.findByCode(product.code);
+            if (existingProduct) {
+                return { error: `El código ingresado ya existe.` };
+            }
+
+            return await this.productRepository.addProduct(product);
+
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    };
+
+    updateProduct = async (id, product) => {
+        try {
+            const productExists = await productRepository.findOne(id);
+            if(!productExists) {
+                return { error: 'Producto no encontrado.' };
+            }
+
+            if (
+                !product.title ||
+                !product.description ||
+                product.price === undefined ||
+                product.status === undefined ||
+                !product.code ||
+                product.stock === undefined ||
+                !product.category
+            ) {
+            return { error: "Debes ingresar todos los campos para actualizar el producto." };
+            }
+
+            const existingProduct = await this.productRepository.findByCode(product.code);
+            if (existingProduct) {
+                return { error: `El código ingresado ya existe.` };
+            }
+
+            return await productRepository.updateProduct(id, product);
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    };
+
+    deleteProduct = async (id) => {
+        try {
+            const existingProduct = productRepository.findOne(id);
+            if(!existingProduct) {
+                return { error: 'Producto no encontrado.' };
+            }
+
+            return await productRepository.deleteProduct(id);
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    };
 }
 
 export const productService = new ProductService();

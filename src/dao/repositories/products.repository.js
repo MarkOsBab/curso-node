@@ -34,6 +34,26 @@ class ProductRepository {
     findOne = async (id) => {
         return await productModel.findById(id);
     };
+
+    addProduct = async (product) => {
+      return await productModel.create(product);
+    };
+
+    findByCode = async (code) => {
+      try {
+        return await productModel.findOne({ code });
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    };
+
+    updateProduct = async (id, product) => {
+      return await productModel.updateOne({_id: id}, product);
+    };
+
+    deleteProduct = async (id) => {
+      return await productModel.deleteOne({_id: id});
+    };
 }
 
 export const productRepository = new ProductRepository();

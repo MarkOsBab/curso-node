@@ -1,4 +1,5 @@
 import { productService } from "../dao/services/products.service.js";
+const URL = "http://localhost:8080/images/";
 
 export async function findAll (req, res) {
     try {
@@ -57,3 +58,61 @@ export async function findOne(req, res) {
         return res.status(500).send(error);
     }
 };
+
+export async function createProduct(req, res) {
+  try {
+    const product = req.body;
+    const thumbnails = req.files ? req.files.map(file => `${URL}${file.filename}`) : null;
+
+    if (!thumbnails || thumbnails.length === 0) {
+      return res
+        .status(400)
+        .send({ status: 'Error', error: 'No se cargaron imágenes.' });
+    }
+
+    product.thumbnails = thumbnails;
+
+    const result = await productService.addProduct(product);
+    if (result && result.error) {
+      return res.status(400).send({ status: 'Error', error: result.error });
+    }
+
+    res.status(200).send({ status: 'Success', payload: 'Producto creado' });
+
+  } catch (error) {
+    return res.status(500).send({ status: 'Error', error: error.message });
+  }
+};
+
+export async function updateProduct(req, res) {
+  try {
+    const { productId } = req.params;
+    const product = req.body;
+
+    const result = await productService.updateProduct(productId, product);
+    if(result && result.error) {
+      return res.status(400).send({status: `Error`, error: result.error});
+    }
+
+    return res.status(200).send({ status: 'success', payload: "Producto actualizado." });
+
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
+export async function deleteProduct(req, res) {
+  try {
+    const { productId } = req.params;
+    
+    const result = await productService.deleteProduct(productId);
+    if(result && result.error) {
+      return res.status(400).send({status: `Error`, error: result.error});
+    }
+
+    return res.status(200).send({ status: 'success', payload: "Producto eliminado." });
+
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
