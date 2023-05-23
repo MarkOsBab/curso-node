@@ -1,5 +1,6 @@
-{{> main}}
+{{!< main}}
 <div class="container-fluid d-flex flex-column">
+    {{#if cart}}
     <h1>Carrito</h1>
     {{#each cart}}
         <div class="col m-1">
@@ -18,4 +19,7 @@
             </div>
         </div>
     {{/each}}
+    {{else}}
+        <h1>Carrito vacío</h1>
+    {{/if}}
 </div>

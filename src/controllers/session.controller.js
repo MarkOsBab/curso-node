@@ -15,7 +15,7 @@ export async function login(req, res) {
             email: result.email,
             age: result.age,
             rol: result.role,
-            cart: result.cartId
+            cart: result.cart
         };
 
         return apiResponser.successResponse(res, req.session.user);

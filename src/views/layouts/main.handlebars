@@ -20,7 +20,7 @@
                 <ul class="navbar-nav">
                     {{#if user}}
                     <li class="nav-item">
-                        <a class="nav-link active" href="cart/64402b52bbb97ea38e69902c"><i class="fa-solid fa-cart-shopping"></i></a>
+                        <a class="nav-link active" href="/cart/{{user.cart}}"><i class="fa-solid fa-cart-shopping"></i></a>
                     </li>
                     <li class="nav-item">
                         <form method="post" action="/api/sessions/logout">

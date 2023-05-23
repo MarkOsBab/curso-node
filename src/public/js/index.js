@@ -1,5 +1,5 @@
-const addToCart = async (productId) => {
-    await fetch(`http://localhost:8080/api/carts/64402b52bbb97ea38e69902c/products/${productId}`, {
+const addToCart = async (cartId, productId) => {
+    await fetch(`http://localhost:8080/api/carts/${cartId}/products/${productId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -7,7 +7,7 @@ const addToCart = async (productId) => {
         })
         .then((cart) => cart.json())
         .then((data) => {
-            alertify.alert('Listo!', `${data.payload}`, function(){ alertify.success(`${data.payload}`); });
+            alertify.alert('Listo!', `Producto agregado al carrito.`, function(){ alertify.success(`Producto agregado al carrito`); });
         })
         .catch((error) => {
             console.log(error);

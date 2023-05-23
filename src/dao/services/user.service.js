@@ -47,19 +47,27 @@ class UserService {
             if(!user) {
                 let splitName = profile._json.name.split(" ");
                 let newUser = {
-                first_name: splitName[0],
-                last_name: splitName.slice(1).join(" "),
-                age: 18,
-                email: profile._json.email,
-                password: "",
-                role: "user",
-                cartId: cart._id
+                    first_name: splitName[0],
+                    last_name: splitName.slice(1).join(" "),
+                    age: 18,
+                    email: profile._json.email,
+                    password: "",
+                    role: "user",
+                    cart: cart._id
                 };
 
                 return await this.userRepository.createUser(newUser);
             }
 
             return user;
+        } catch (error) {
+            throw new Error(error);
+        }
+    };
+
+    findById = async (id) => {
+        try {
+            return await this.userRepository.findById(id);
         } catch (error) {
             throw new Error(error);
         }

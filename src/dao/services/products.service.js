@@ -19,7 +19,7 @@ class ProductService {
             if(!result) {
                 return { error: 'Producto no encontrado.' };
             }
-            return 
+            return result;
         } catch (error) {
             throw new Error(error);
         }
