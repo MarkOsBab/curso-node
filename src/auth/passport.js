@@ -1,12 +1,16 @@
 import passport from "passport";
 import GitHubStrategy from "passport-github2";
-import userModel from "../dao/models/user.model.js";
+import { userModel } from "../dao/models/user.model.js";
 import { createHash, isValidPassword } from "../utils.js";
 import config from "../config.js";
 import local from "passport-local";
 import { cartModel } from "../dao/models/cart.model.js";
 const { clientID, clientSecret, callbackUrl } = config;
 const LocalStrategy = local.Strategy;
+
+// Services
+import { userService } from "../dao/services/user.service.js";
+import { cartService } from "../dao/services/cart.service.js";
 
 const initializePassport = () => {
     passport.use(
@@ -17,24 +21,8 @@ const initializePassport = () => {
             callbackUrl
         }, async(accessToken, refreshToken, profile, done) => {
             try {
-                let user = await userModel.findOne({ email: profile._json.email });
-                const cart = await cartModel.create({});
-                if(!user) {
-                    let splitName = profile._json.name.split(" ");
-                    let newUser = {
-                        first_name: splitName[0],
-                        last_name: splitName.slice(1).join(" "),
-                        age: 18,
-                        email: profile._json.email,
-                        password: "",
-                        role: "user",
-                        cartId: cart._id
-                    };
-
-                    let result = await userModel.create(newUser);
-                    return done(null, result);
-                }
-                return done(null, user);
+                const result = await userService.authenticateWithGithub(profile);
+                done(null, result);
             } catch (error) {
                 return done(error);
             }
@@ -46,14 +34,7 @@ const initializePassport = () => {
             async (req, username, password, done) => {
                 try {
                     const { first_name, last_name, role, age } = req.body;
-                    const userExists = await userModel.findOne({email: username});
-                    if(userExists) {
-                        console.error("User already exists");
-                        return done(null, false);
-                    }
-
-                    const cart = await cartModel.create({});
-                    
+                    const cart = await cartService.createCart({products: []});
                     const user = {
                         first_name,
                         last_name,
@@ -63,9 +44,9 @@ const initializePassport = () => {
                         role: role ?? "user",
                         cart: cart._id,
                     };
-
-                    const result = await userModel.create(user);
-                    return done(null, result);
+                    
+                    const result = await userService.register(user);
+                    return done(null, result._id);
                 } catch (error) {
                     return done(error);
                 }
@@ -75,20 +56,8 @@ const initializePassport = () => {
         "login",
         new LocalStrategy({ usernameField: "email" }, async (username, password, done) => {
             try {
-                const user = await userModel.findOne({email: username});
-                if(!user)
-                {
-                    console.error("Authentication error");
-                    return done(null, false);
-                }
-                const validPassword = isValidPassword(user, password);
-                if(!validPassword) {
-                    console.error("Incorrect credentials");
-                    return done(null, false);
-                } else {
-                    delete user.password;
-                    return done(null, user);
-                }
+                const user = await userService.login(username, password);
+                return done(null, user._id);
             } catch (error) {
                 return done(error);
             }

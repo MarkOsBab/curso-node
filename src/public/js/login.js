@@ -17,7 +17,10 @@ form.addEventListener("submit", async (e) => {
   });
 
   let result = await response.json();
-  if(result) {
+  
+  if(result.error) {
+    alert(result.error);
+  } else {
     window.location.href = '/products';
   }
 });
