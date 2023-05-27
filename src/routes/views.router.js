@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { getProducts, login, profile, register, viewCart, viewProduct } from '../controllers/view.controller.js';
+import { getProducts, home, login, profile, register, viewCart, viewProduct } from '../controllers/view.controller.js';
 
 const router = Router();
 
+router.get("/", home)
 router.get("/products", getProducts);
 router.get("/product/:productId", viewProduct);
 router.get("/cart/:cartId", viewCart);

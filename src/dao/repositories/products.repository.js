@@ -62,6 +62,14 @@ class ProductRepository {
         throw new Error(error);
       }
     };
+
+    saveProduct = async (product) => {
+      try {
+          return await product.save();
+      } catch (error) {
+          throw new Error(error);
+      }
+  }
 }
 
 export const productRepository = new ProductRepository();
