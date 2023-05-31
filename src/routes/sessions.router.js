@@ -1,5 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
+import { authorize } from "../middlewares/authorization.js";
 import { current, failLogin, failRegister, github, githubCallback, login, logout, register } from "../controllers/session.controller.js";
 
 const router = Router();
@@ -22,7 +23,7 @@ router.get("/failRegister", failRegister);
 
 router.post("/logout", logout);
 
-router.get("/current", current);
+router.get("/current", authorize(['user']), current);
 
 router.get(
     "/github", 

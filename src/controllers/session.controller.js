@@ -1,3 +1,4 @@
+import { GetProfile } from "../dao/dtos/getProfile.js";
 import { userService } from "../dao/services/user.service.js";
 import { apiResponser } from "../traits/ApiResponser.js";
 
@@ -65,7 +66,9 @@ export async function logout(req, res) {
 
 export async function current(req, res) {
     try {
-        return apiResponser.successResponse(res, req.session.user);
+        const getProfile = new GetProfile(req.session.user);
+        console.log(getProfile);
+        return apiResponser.successResponse(res, getProfile);
     } catch (error) {
         return apiResponser.errorResponse(res, error.message);
     }

@@ -1,6 +1,7 @@
 import { productService } from "../dao/services/products.service.js";
 import { cartService } from "../dao/services/cart.service.js";
 import { apiResponser } from "../traits/ApiResponser.js";
+import { GetProfile } from "../dao/dtos/getProfile.js";
 
 export async function home(req, res) {
     try {
@@ -134,7 +135,8 @@ export async function login(req, res) {
 
 export async function profile(req, res) {
     try {
-        res.render('profile', { user: req.session.user });
+        const getProfile = new GetProfile(req.session.user);
+        res.render('profile', { user: getProfile });
     } catch (error) {
         return apiResponser.errorResponse(res, error.message);
     }
