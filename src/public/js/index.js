@@ -14,34 +14,16 @@ const addToCart = async (cartId, productId) => {
         });
 };
 
-const sumarButton = document.querySelector('#sumar');
-
-const restarButton = document.querySelector('#restar');
-const cantidadElement = document.querySelector('#cantidad');
-
-sumarButton.addEventListener('click', () => {
-    const cartId = sumarButton.dataset.cartId;
-    const productId = sumarButton.dataset.productId;
-    
-    agregaUno(1, cartId, productId);
-});
-
-restarButton.addEventListener('click', () => {
-    const cartId = restarButton.dataset.cartId;
-    const productId = restarButton.dataset.productId;
-
-    borraUno(-1, cartId, productId);
-});
-
 async function agregaUno(cantidad, cartId, productId) {
+  const cantidadElement = document.querySelector(`#cantidad-${productId}`);
   const currentQuantity = parseInt(cantidadElement.textContent);
 
   const newQuantity = currentQuantity + cantidad;
   if (newQuantity >= 0) {
     // Realizar la solicitud al endpoint del backend
     await fetch(`http://localhost:8080/api/carts/${cartId}/products/${productId}`, {
-      method: 'POST',
-      body: JSON.stringify({ cartId, productId, cantidad: newQuantity }),
+      method: 'PUT',
+      body: JSON.stringify({ quantity: newQuantity }),
       headers: {
         'Content-Type': 'application/json'
       }
@@ -61,14 +43,14 @@ async function agregaUno(cantidad, cartId, productId) {
 }
 
 async function borraUno(cantidad, cartId, productId) {
+    const cantidadElement = document.querySelector(`#cantidad-${productId}`);
     const currentQuantity = parseInt(cantidadElement.textContent);
   
     const newQuantity = currentQuantity - cantidad;
-    if (newQuantity >= 0) {
-      // Realizar la solicitud al endpoint del backend
+      
       await fetch(`http://localhost:8080/api/carts/${cartId}/products/${productId}`, {
-        method: 'POST',
-        body: JSON.stringify({ quantity: -1 }),
+        method: 'PUT',
+        body: JSON.stringify({ quantity: currentQuantity >= 1 ? currentQuantity-1 : 1 }),
         headers: {
           'Content-Type': 'application/json'
         }
@@ -84,7 +66,7 @@ async function borraUno(cantidad, cartId, productId) {
       .catch(error => {
         console.error('Error:', error);
       });
-    }
+
   }
 
   const borrar = async (cartId, productId) => {
@@ -156,4 +138,59 @@ async function borraUno(cantidad, cartId, productId) {
     } catch (error) {
       console.log(error);
     }
+}
+
+const copyToClipboard = (text) => {
+    const el = document.createElement('textarea');
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+
+    const copyButton = document.getElementById('copyButton');
+    copyButton.innerHTML = '<i class="fas fa-check"></i>';
+    copyButton.disabled = true;
+
+    setTimeout(function () {
+        copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+        copyButton.disabled = false;
+    }, 2000);
+}
+
+const deleteFromCart = async (cartId, productId) => {
+  try {
+    await fetch(`http://localhost:8080/api/carts/${cartId}/products/${productId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    })
+    .then(response => response.json())
+    .then(data => {
+      const row = document.querySelector(`tr[data-product-id="${productId}"]`);
+      if (row) {
+        // Eliminar la fila de la tabla
+        row.remove();
+
+        // Verificar si no hay más filas en la tabla
+        const table = document.querySelector('.table');
+        const rowCount = table.querySelectorAll('tbody tr').length;
+
+        if (rowCount === 0) {
+          // Si no hay más filas, mostrar un mensaje de carrito vacío
+          const emptyMessage = document.createElement('p');
+          emptyMessage.textContent = 'No hay más productos sin procesar en el carrito.';
+          emptyMessage.classList.add('my-3');
+          table.parentNode.insertBefore(emptyMessage, table.nextSibling);
+          setTimeout(function () {
+            window.location.reload();
+        }, 2000);
+        }
+      }
+    }
+    ).catch(error => console.log(error));
+  } catch (error) {
+    console.log(error);
   }
+}

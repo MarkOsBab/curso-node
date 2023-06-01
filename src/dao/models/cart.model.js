@@ -12,7 +12,7 @@ const cartSchema = mongoose.Schema({
                 type: Number
             }
         }
-    ]
+    ],
 });
 
 cartSchema.pre(["find", "findOne"], function () {

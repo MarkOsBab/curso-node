@@ -28,6 +28,22 @@ class UserRepository {
             throw new Error(error);
         }
     };
+
+    findByCartId = async(cartId) => {
+        try {
+            return await this.model.findOne({cart: cartId});
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+
+    saveUser = async (user) => {
+        try {
+            return await this.model.findOneAndUpdate({_id: user._id}, { $set: user });
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
 }
 
 

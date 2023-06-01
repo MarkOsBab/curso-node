@@ -1,5 +1,6 @@
 import { productService } from "../dao/services/products.service.js";
 import { cartService } from "../dao/services/cart.service.js";
+import { ticketService } from "../dao/services/ticket.service.js";
 import { apiResponser } from "../traits/ApiResponser.js";
 import { GetProfile } from "../dao/dtos/getProfile.js";
 
@@ -116,6 +117,20 @@ export async function viewCart(req, res) {
         return apiResponser.errorResponse(res, error.message);
     }
 };
+
+export async function purchase(req, res) {
+    try {
+        const { cartId } = req.params;
+        const result = await ticketService.createTicket(cartId);
+        
+        res.render('purchase', {
+            ticket: JSON.parse(JSON.stringify(result)),
+            user: req.session.user
+        });
+    } catch (error) {
+        return apiResponser.errorResponse(res, error.message);
+    }
+}
 
 export async function register(req, res) {
     try {

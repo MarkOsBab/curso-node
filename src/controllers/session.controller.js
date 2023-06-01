@@ -67,7 +67,6 @@ export async function logout(req, res) {
 export async function current(req, res) {
     try {
         const getProfile = new GetProfile(req.session.user);
-        console.log(getProfile);
         return apiResponser.successResponse(res, getProfile);
     } catch (error) {
         return apiResponser.errorResponse(res, error.message);

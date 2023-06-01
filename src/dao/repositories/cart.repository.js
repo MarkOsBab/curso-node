@@ -31,7 +31,7 @@ class CartRepository {
 
     saveCart = async (cart) => {
         try {
-            return await cart.save();
+            return await this.model.findOneAndUpdate({_id: cart._id}, { $set: cart });
         } catch (error) {
             throw new Error(error);
         }

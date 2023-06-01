@@ -22,11 +22,11 @@
                         <p>Cantidad</p>
                         <div class="d-flex align-items-center">
                             <div class="col-3 d-flex flex-row gap-3 text-center py-1 rounded">
-                                <button class="btn btn-primary btn-sm" id="sumar" data-cart-id="{{ @root.cart._id}}" data-product-id="{{ product._id }}">
+                                <button class="btn btn-primary btn-sm" onclick="agregaUno(1, '{{@root.cart._id}}', '{{product._id}}')">
                                     <i class="fa-solid fa-plus"></i>
                                 </button>
-                                <span class="text-muted" id="cantidad">{{ quantity }}</span>
-                                <button class="btn btn-primary btn-sm" id="restar" data-cart-id="{{ @root.cart._id}}" data-product-id="{{ product._id }}">
+                                <span class="text-muted" id="cantidad-{{product._id}}">{{ quantity }}</span>
+                                <button class="btn btn-primary btn-sm" onclick="borraUno(-1, '{{@root.cart._id}}', '{{product._id}}')">
                                     <i class="fa-solid fa-minus"></i>
                                 </button>
                             </div>
@@ -41,10 +41,13 @@
             </div>
         </div>
         {{/each}}
-        <div class="d-flex justify-content-end align-items-center mt-5">
+        <div class="d-flex justify-content-end align-items-center mt-5 gap-2">
             <button class="btn btn-sm btn-secondary" onclick="vaciarCarrito('{{@root.cart._id}}')">
                 Vaciar el carrito
             </button>
+            <a href="/cart/{{@root.cart._id}}/purchase" class="btn btn-sm btn-primary">
+                Finalizar la compra
+            </a>
         </div>
         {{else}}
         <div class="col d-flex flex-column p-3 justify-content-center align-items-center">

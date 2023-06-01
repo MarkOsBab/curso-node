@@ -1,4 +1,5 @@
 import { cartService } from "../dao/services/cart.service.js";
+import { ticketService } from "../dao/services/ticket.service.js";
 import { apiResponser } from "../traits/ApiResponser.js";
 
 export async function findAll(req, res) {
@@ -126,3 +127,16 @@ export async function updateQuantityOfProduct(req, res) {
         return apiResponser.errorResponse(res, error.message);
     }
 };
+
+export async function purchase(req, res) {
+    try {
+        const { cartId } = req.params;
+        const result = await ticketService.createTicket(cartId);
+        if(result && result.error) {
+            return apiResponser.errorResponse(res, result.error, 400);
+        }
+        return apiResponser.successResponse(res, result);
+    } catch (error) {
+        return apiResponser.errorResponse(res, error.message);
+    }
+}
