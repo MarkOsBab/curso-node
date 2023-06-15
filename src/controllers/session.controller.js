@@ -6,10 +6,6 @@ export async function login(req, res) {
     try {
         const { email, password } = req.body;
         const result = await userService.login(email, password);
-        
-        if(result && result.error) {
-            return apiResponser.errorResponse(res, result.error, 400);
-        }
 
         req.session.user = {
             name: `${result.first_name} ${result.last_name}`,

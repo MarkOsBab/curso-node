@@ -1,4 +1,6 @@
 import { productService } from "../dao/services/products.service.js";
+import CustomError from "../errors/CustomError.js";
+import { ErrorsCause, ErrorsMessage, ErrorsName } from "../errors/enums/product.error.enum.js";
 import { apiResponser } from "../traits/ApiResponser.js";
 const URL = "http://localhost:8080/images/";
 
@@ -24,9 +26,7 @@ export async function findAll (req, res) {
       const prevLink = prevPage ? `/products?limit=${limit}&page=${prevPage}&query=${query}&sort=${sort}` : null;
       const nextLink = nextPage ? `/products?limit=${limit}&page=${nextPage}&query=${query}&sort=${sort}` : null;
       const payload = result.docs;
-      if (result && result.error) {
-        return apiResponser.errorResponse(res, result.error, 400); 
-      }
+
       return apiResponser.successResponse(
         res, 
         {
@@ -50,10 +50,6 @@ export async function findOne(req, res) {
     try {
         const { productId } = req.params;
         const result = await productService.findOne(productId);
-        if(result && result.error) {
-            return apiResponser.errorResponse(res, result.error, 400);
-        }
-
         return apiResponser.successResponse(res, result);
     } catch (error) {
         return apiResponser.errorResponse(res, error.message);
@@ -66,17 +62,18 @@ export async function createProduct(req, res) {
     const thumbnails = req.files ? req.files.map(file => `${URL}${file.filename}`) : null;
 
     if (!thumbnails || thumbnails.length === 0) {
-      return apiResponser.errorResponse(res, `No se cargaron imágenes.`, 400);
+      CustomError.generateCustomError({
+        name: ErrorsName.GENERAL_ERROR_NAME,
+        message: ErrorsMessage.THUMBNAIL_NOT_UPLOADED_MESSAGE,
+        cause: ErrorsCause.THUMBNAIL_NOT_UPLOADED_CAUSE
+      });
     }
 
     product.thumbnails = thumbnails;
 
     const result = await productService.addProduct(product);
-    if (result && result.error) {
-      return apiResponser.errorResponse(res, result.error, 400);
-    }
 
-    return apiResponser.successResponse(res, `Producto creado`);
+    return apiResponser.successResponse(res, result);
 
   } catch (error) {
     return apiResponser.errorResponse(res, error.message);
@@ -89,9 +86,6 @@ export async function updateProduct(req, res) {
     const product = req.body;
 
     const result = await productService.updateProduct(productId, product);
-    if(result && result.error) {
-      return apiResponser.errorResponse(res, result.error, 400);
-    }
 
     return apiResponser.successResponse(res, result);
 
@@ -105,11 +99,8 @@ export async function deleteProduct(req, res) {
     const { productId } = req.params;
     
     const result = await productService.deleteProduct(productId);
-    if(result && result.error) {
-      return apiResponser.errorResponse(res, result.error, 400);
-    }
 
-    return apiResponser.successResponse(res, `Producto eliminado`);
+    return apiResponser.successResponse(res, result);
 
   } catch (error) {
     return apiResponser.errorResponse(res, error.message);
