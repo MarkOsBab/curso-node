@@ -1,6 +1,7 @@
 import { productService } from "../dao/services/products.service.js";
 import CustomError from "../errors/CustomError.js";
 import { ErrorsCause, ErrorsMessage, ErrorsName } from "../errors/enums/product.error.enum.js";
+import { generateProducts } from "../mocks/products.mock.js";
 import { apiResponser } from "../traits/ApiResponser.js";
 const URL = "http://localhost:8080/images/";
 
@@ -105,4 +106,16 @@ export async function deleteProduct(req, res) {
   } catch (error) {
     return apiResponser.errorResponse(res, error.message);
   }
-}
+};
+
+export function mockingProducts(req, res) {
+  try {
+    let products = [];
+    for(let i=0; i<100; i++) {
+      products.push(generateProducts());
+    }
+    return apiResponser.successResponse(res, products);
+  } catch (error) {
+    return apiResponser.errorResponse(res, error.message);
+  }
+};
