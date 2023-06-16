@@ -30,7 +30,7 @@ const developmentLogger = winston.createLogger({
                 winston.format.colorize({ colors: customLevel.colors }),
                 winston.format.simple()
             )
-        })
+        }),
     ]
 });
 

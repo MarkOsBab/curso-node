@@ -53,7 +53,6 @@ app.use("/api/carts", cartRouter);
 app.use("/api/sessions", sessionRouter);
 
 app.get("/loggerTest", (req, res) => {
-    
     logger.debug("This is a debug log");
     logger.http("This is an HTTP log");
     logger.info("This is an info log");
