@@ -1,6 +1,6 @@
 import { userRepository } from "../repositories/user.repository.js";
 import { cartService } from "./cart.service.js";
-import { isValidPassword } from "../../utils.js";
+import { isValidPassword } from "../../utils/utils.js";
 import CustomError from "../../errors/CustomError.js";
 import { ErrorsName, ErrorsMessage, ErrorsCause } from "../../errors/enums/user.error.enum.js";
 

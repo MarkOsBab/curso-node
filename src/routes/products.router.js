@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { uploader } from './../utils.js';
-import __dirname from "./../utils.js";
+import { uploader } from '../utils/utils.js';
+import __dirname from "../utils/utils.js";
 import { authentication } from "../middlewares/authentication.js";
 import { authorize } from "../middlewares/authorization.js";
 import { findAll, findOne, createProduct, updateProduct, deleteProduct, mockingProducts } from './../controllers/product.controller.js';
