@@ -1,6 +1,6 @@
 import winston from "winston";
 import __dirname from "./utils.js";
-import config from "../config.js";
+import config from "../config/config.js";
 
 const customLevel = {
     levels: {
@@ -25,7 +25,7 @@ const developmentLogger = winston.createLogger({
     levels: customLevel.levels,
     transports: [
         new winston.transports.Console({
-            level: "debug",
+            level: "fatal",
             format: winston.format.combine(
                 winston.format.colorize({ colors: customLevel.colors }),
                 winston.format.simple()
@@ -52,6 +52,6 @@ const productionLogger = winston.createLogger({
     ],
 });
 
-const logger = config.developmentMode === false ? productionLogger : developmentLogger;
+const logger = config.server.developmentMode === false ? productionLogger : developmentLogger;
 
 export { logger };

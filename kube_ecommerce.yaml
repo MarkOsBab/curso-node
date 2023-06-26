@@ -31,6 +31,6 @@ spec:
             - containerPort: 8080
           env: 
             - name: DB_URL
-              value: mongodb+srv://MarkOsBab_:GSJK3Oyw3iyzy75Q@codercluster.jhkxbaz.mongodb.net/e-commerce?retryWrites=true&w=majority
+              value: 
           imagePullPolicy: Always
           

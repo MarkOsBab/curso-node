@@ -8,7 +8,7 @@ import viewsRouter from './routes/views.router.js';
 import productRouter from './routes/products.router.js';
 import cartRouter from './routes/carts.router.js';
 import sessionRouter from './routes/sessions.router.js';
-import config from "./config.js";
+import config from "./config/config.js";
 import initializePassport from "./auth/passport.js";
 import passport from "passport";
 import { errorMiddleware } from './middlewares/error.js';
@@ -24,20 +24,20 @@ app.use(loggerMiddleware);
 
 app.use(session({
     store: MongoStore.create({
-        mongoUrl: config.dbUrl,
+        mongoUrl: config.mongo.dbUrl,
         ttl: 120,
     }),
     resave: true,
     saveUninitialized: false,
-    secret: config.sessionSecret
+    secret: config.session.sessionSecret
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 initializePassport();
 
-app.listen(config.port, () => {
-    logger.debug(`Server runing at port ${config.port}`);
+app.listen(config.server.port, () => {
+    logger.debug(`Server runing at port ${config.server.port}`);
 });
 
 database.connect();

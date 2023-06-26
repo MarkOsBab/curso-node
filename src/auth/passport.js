@@ -1,9 +1,9 @@
 import passport from "passport";
 import GitHubStrategy from "passport-github2";
 import { createHash } from "../utils/utils.js";
-import config from "../config.js";
+import config from "../config/config.js";
 import local from "passport-local";
-const { clientID, clientSecret, callbackUrl } = config;
+const { clientID, clientSecret, callbackUrl } = config.github;
 const LocalStrategy = local.Strategy;
 
 // Services
