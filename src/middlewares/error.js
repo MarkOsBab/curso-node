@@ -4,4 +4,5 @@ export const errorMiddleware = (err, req, res, next) => {
       message: err.message,
       cause: err.cause,
     });
+    next();
 };

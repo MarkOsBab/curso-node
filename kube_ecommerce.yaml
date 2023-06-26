@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubeservice
+spec:
+  selector:
+    app: kube-ecommerce
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-ecommerce
+spec: 
+  replicas: 5
+  selector: 
+    matchLabels:
+      app: kube-ecommerce
+  template:
+    metadata:
+      labels:
+        app:  kube-ecommerce
+    spec:
+      containers:
+        - name: kubecontainer
+          image: markosbab/e_commerce:1.0.0
+          ports: 
+            - containerPort: 8080
+          env: 
+            - name: DB_URL
+              value: mongodb+srv://MarkOsBab_:GSJK3Oyw3iyzy75Q@codercluster.jhkxbaz.mongodb.net/e-commerce?retryWrites=true&w=majority
+          imagePullPolicy: Always
+          
