@@ -1,11 +1,18 @@
 import { GetProfile } from "../dao/dtos/getProfile.js";
 import { userService } from "./../services/index.js";
 import { apiResponser } from "../traits/ApiResponser.js";
+import { generateToken } from "../utils/utils.js";
+import config from "../config/config.js";
+
+const {jwt: { cookie } } = config;
 
 export async function login(req, res) {
     try {
         const { email, password } = req.body;
         const result = await userService.login(email, password);
+
+        const token = generateToken(result._id);
+        res.cookie(cookie, token, { httpOnly: true, maxAge: 3600 * 1000 });
 
         req.session.user = {
             name: `${result.first_name} ${result.last_name}`,
@@ -48,6 +55,7 @@ export async function failRegister(req, res) {
 
 export async function logout(req, res) {
     try {
+        res.clearCookie(cookie);
         req.session.destroy((error) => {
             if(error) {
                 apiResponser.errorResponse(res, error);

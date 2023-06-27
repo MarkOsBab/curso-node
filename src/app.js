@@ -14,6 +14,7 @@ import passport from "passport";
 import { errorMiddleware } from './middlewares/error.js';
 import { loggerMiddleware } from "./middlewares/logger.js";
 import { logger } from "./utils/logger.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -21,7 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use("/", express.static(`${__dirname}/../public`));
 app.use(loggerMiddleware);
-
+app.use(cookieParser());
 app.use(session({
     store: MongoStore.create({
         mongoUrl: config.mongo.dbUrl,

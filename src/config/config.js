@@ -8,6 +8,9 @@ const config = {
     session: {
         sessionSecret: process.env.SESSION_SECRET,
     },
+    jwt: {
+        cookie: process.env.JWT_COOKIE
+    },
     github: {
         clientID: process.env.CLIENT_ID,
         clientSecret: process.env.CLIENT_SECRET,

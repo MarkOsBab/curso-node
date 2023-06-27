@@ -3,14 +3,39 @@ import GitHubStrategy from "passport-github2";
 import { createHash } from "../utils/utils.js";
 import config from "../config/config.js";
 import local from "passport-local";
+import jwt, { ExtractJwt } from "passport-jwt";
+
 const { 
-    github: { clientID, clientSecret, callbackUrl } 
+    github: { clientID, clientSecret, callbackUrl },
+    session: { sessionSecret },
+    jwt: { cookie },
 } = config;
 const LocalStrategy = local.Strategy;
 
 import { cartService, userService } from "./../services/index.js";
 
+const cookieExtractor = (req) => {
+    let token = null;
+    if (req && req.cookies) {
+      token = req.cookies[cookie];
+    }
+    return token;
+};
+
 const initializePassport = () => {
+    passport.use(
+        "current",
+        new jwt.Strategy({
+            secretOrKey: sessionSecret,
+            jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor])
+        }, async (jwt_payload, done) => {
+            try {
+                return done(null, jwt_payload);
+            } catch (error) {
+                return done(error);
+            }
+        })
+    ),
     passport.use(
         "github",
         new GitHubStrategy({
