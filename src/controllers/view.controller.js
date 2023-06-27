@@ -1,6 +1,4 @@
-import { productService } from "../dao/services/products.service.js";
-import { cartService } from "../dao/services/cart.service.js";
-import { ticketService } from "../dao/services/ticket.service.js";
+import { productService, cartService, ticketService } from "./../services/index.js";
 import { apiResponser } from "../traits/ApiResponser.js";
 import { GetProfile } from "../dao/dtos/getProfile.js";
 

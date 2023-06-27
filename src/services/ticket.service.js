@@ -1,12 +1,9 @@
-import { ticketRepository } from './../repositories/ticket.repository.js';
-import { cartRepository } from './../repositories/cart.repository.js';
+import { cartRepository, productRepository, ticketRepository, userRepository } from "../repositories/index.js";
 import { v4 as uuid4 } from 'uuid';
-import { userRepository } from '../repositories/user.repository.js';
-import { productRepository } from '../repositories/products.repository.js';
-import CustomError from "../../errors/CustomError.js";
-import { ErrorsName, ErrorsMessage, ErrorsCause } from '../../errors/enums/ticket.error.enum.js';
+import CustomError from "./../errors/CustomError.js";
+import { ErrorsName, ErrorsMessage, ErrorsCause } from './../errors/enums/ticket.error.enum.js';
 
-class TicketService {
+export class TicketService {
     constructor(){
         this.ticketRepository = ticketRepository;
         this.productRepository = productRepository;
@@ -130,5 +127,3 @@ class TicketService {
         }
     };
 }
-
-export const ticketService = new TicketService();

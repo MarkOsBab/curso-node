@@ -1,8 +1,8 @@
-import { productRepository } from "../repositories/products.repository.js";
-import CustomError from "../../errors/CustomError.js"; 
-import { ErrorsName, ErrorsMessage, ErrorsCause } from "../../errors/enums/product.error.enum.js";
+import { productRepository } from "../repositories/index.js";
+import CustomError from "./../errors/CustomError.js"; 
+import { ErrorsName, ErrorsMessage, ErrorsCause } from "./../errors/enums/product.error.enum.js";
 
-class ProductService {
+export class ProductService {
     constructor(){
         this.productRepository = productRepository;
     }
@@ -124,5 +124,3 @@ class ProductService {
         }
     };
 }
-
-export const productService = new ProductService();

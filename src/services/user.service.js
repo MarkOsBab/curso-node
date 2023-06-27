@@ -1,10 +1,10 @@
-import { userRepository } from "../repositories/user.repository.js";
-import { cartService } from "./cart.service.js";
-import { isValidPassword } from "../../utils/utils.js";
-import CustomError from "../../errors/CustomError.js";
-import { ErrorsName, ErrorsMessage, ErrorsCause } from "../../errors/enums/user.error.enum.js";
+import { userRepository } from "./../repositories/index.js";
+import { cartService } from "./../services/index.js";
+import { isValidPassword } from "./../utils/utils.js";
+import CustomError from "./../errors/CustomError.js";
+import { ErrorsName, ErrorsMessage, ErrorsCause } from "./../errors/enums/user.error.enum.js";
 
-class UserService {
+export class UserService {
     constructor(){
         this.userRepository = userRepository;
     }
@@ -95,5 +95,3 @@ class UserService {
         }
     };
 }
-
-export const userService = new UserService();

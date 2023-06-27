@@ -1,6 +1,6 @@
-import { userModel } from '../models/user.model.js';
+import { userModel } from "./../models/user.model.js";
 
-class UserRepository {
+export class User {
     constructor(){
         this.model = userModel;
     }
@@ -45,6 +45,3 @@ class UserRepository {
         }
     }
 }
-
-
-export const userRepository = new UserRepository();

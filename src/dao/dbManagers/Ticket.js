@@ -1,7 +1,7 @@
-import { ticketModel } from './../models/ticket.model.js';
+import { ticketModel } from "./../models/ticket.model.js";
 
-class TicketRepository {
-    constructor() {
+export class Ticket {
+    constructor(){
         this.model = ticketModel;
     }
 
@@ -13,5 +13,3 @@ class TicketRepository {
         }
     };
 }
-
-export const ticketRepository = new TicketRepository();

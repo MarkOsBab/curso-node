@@ -1,4 +1,4 @@
-import { productService } from "../dao/services/products.service.js";
+import { productService } from "./../services/index.js";
 import CustomError from "../errors/CustomError.js";
 import { ErrorsCause, ErrorsMessage, ErrorsName } from "../errors/enums/product.error.enum.js";
 import { generateProducts } from "../mocks/products.mock.js";

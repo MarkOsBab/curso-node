@@ -3,12 +3,12 @@ import GitHubStrategy from "passport-github2";
 import { createHash } from "../utils/utils.js";
 import config from "../config/config.js";
 import local from "passport-local";
-const { clientID, clientSecret, callbackUrl } = config.github;
+const { 
+    github: { clientID, clientSecret, callbackUrl } 
+} = config;
 const LocalStrategy = local.Strategy;
 
-// Services
-import { userService } from "../dao/services/user.service.js";
-import { cartService } from "../dao/services/cart.service.js";
+import { cartService, userService } from "./../services/index.js";
 
 const initializePassport = () => {
     passport.use(

@@ -1,5 +1,4 @@
-import { cartService } from "../dao/services/cart.service.js";
-import { ticketService } from "../dao/services/ticket.service.js";
+import { cartService, ticketService } from "./../services/index.js";
 import { apiResponser } from "../traits/ApiResponser.js";
 
 export async function findAll(req, res) {

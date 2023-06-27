@@ -1,5 +1,5 @@
 import { GetProfile } from "../dao/dtos/getProfile.js";
-import { userService } from "../dao/services/user.service.js";
+import { userService } from "./../services/index.js";
 import { apiResponser } from "../traits/ApiResponser.js";
 
 export async function login(req, res) {
