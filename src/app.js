@@ -8,6 +8,7 @@ import viewsRouter from './routes/views.router.js';
 import productRouter from './routes/products.router.js';
 import cartRouter from './routes/carts.router.js';
 import sessionRouter from './routes/sessions.router.js';
+import restoreRouter from './routes/restore.router.js';
 import config from "./config/config.js";
 import initializePassport from "./auth/passport.js";
 import passport from "passport";
@@ -52,6 +53,7 @@ app.use("/", viewsRouter);
 app.use("/api/products", productRouter);
 app.use("/api/carts", cartRouter);
 app.use("/api/sessions", sessionRouter);
+app.use("/api/restore", restoreRouter);
 
 app.get("/loggerTest", (req, res) => {
     logger.debug("This is a debug log");

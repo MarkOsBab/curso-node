@@ -1,4 +1,4 @@
-import { productService, cartService, ticketService } from "./../services/index.js";
+import { productService, cartService, ticketService, restoreService } from "./../services/index.js";
 import { apiResponser } from "../traits/ApiResponser.js";
 import { GetProfile } from "../dao/dtos/getProfile.js";
 
@@ -154,3 +154,22 @@ export async function profile(req, res) {
         return apiResponser.errorResponse(res, error.message);
     }
 };
+
+export async function restorePassword(req, res) {
+    try {
+        const { token } = req.query;
+        
+        const restore = await restoreService.restorePassword(token);
+        if (!restore) {
+            return res.render('generateRestorePassword');
+        } else {
+            if(!token) {
+                return res.render('generateRestorePassword');
+            } else {
+                return res.render('restorePassword');
+            }
+        }
+    } catch (error) {
+        return apiResponser.errorResponse(res, error.message);
+    }
+}

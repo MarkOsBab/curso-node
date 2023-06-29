@@ -70,5 +70,13 @@ export class Product {
           throw new Error(error);
       }
     }
+
+    deleteProduct = async (productId) => {
+      try {
+        return await this.model.findByIdAndDelete(productId);
+      } catch (error) {
+        throw new Error();
+      }
+    }
     
 }

@@ -51,5 +51,13 @@ export class ProductRepository {
       } catch (error) {
           throw new Error(error);
       }
-  }
+    }
+
+    deleteProduct = async (productId) => {
+      try {
+        return await this.manager.deleteProduct(productId);
+      } catch (error) {
+        throw new Error(error);
+      }
+    }
 }

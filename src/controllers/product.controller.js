@@ -72,7 +72,7 @@ export async function createProduct(req, res) {
 
     product.thumbnails = thumbnails;
 
-    const result = await productService.addProduct(product);
+    const result = await productService.addProduct(product, req.session.user.id);
 
     return apiResponser.successResponse(res, result);
 
@@ -86,7 +86,7 @@ export async function updateProduct(req, res) {
     const { productId } = req.params;
     const product = req.body;
 
-    const result = await productService.updateProduct(productId, product);
+    const result = await productService.updateProduct(productId, product, req.session.user.id);
 
     return apiResponser.successResponse(res, result);
 
@@ -99,7 +99,7 @@ export async function deleteProduct(req, res) {
   try {
     const { productId } = req.params;
     
-    const result = await productService.deleteProduct(productId);
+    const result = await productService.deleteProduct(productId, req.session.user.id);
 
     return apiResponser.successResponse(res, result);
 

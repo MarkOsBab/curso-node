@@ -15,11 +15,12 @@ export async function login(req, res) {
         res.cookie(cookie, token, { httpOnly: true, maxAge: 3600 * 1000 });
 
         req.session.user = {
+            id: result._id,
             name: `${result.first_name} ${result.last_name}`,
             email: result.email,
             age: result.age,
             rol: result.role,
-            cart: result.cart
+            cart: result.cart,
         };
 
         return apiResponser.successResponse(res, req.session.user);

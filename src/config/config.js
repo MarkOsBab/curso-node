@@ -19,6 +19,10 @@ const config = {
     server: {
         port: process.env.PORT,
         developmentMode: process.env.DEV_MODE
+    },
+    email: {
+        user: process.env.EMAIL,
+        password: process.env.EMAIL_PASSWORD
     }
 };
 
