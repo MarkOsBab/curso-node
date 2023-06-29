@@ -43,7 +43,7 @@ export async function addProductToCart(req, res) {
         const { cartId, productId } = req.params;
         const { quantity } = req.body;
 
-        const result = await cartService.addProductToCart(cartId, productId, quantity);
+        const result = await cartService.addProductToCart(cartId, productId, quantity, req.session.user.id);
 
         return apiResponser.successResponse(res, result);
 

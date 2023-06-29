@@ -44,4 +44,12 @@ export class UserRepository {
             throw new Error(error);
         }
     }
+
+    changeRole = async (userId, role) => {
+        try {
+            return await this.manager.changeRole(userId, role);
+        } catch (error) {
+            throw new Error();
+        }
+    }
 }

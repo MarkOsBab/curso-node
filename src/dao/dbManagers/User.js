@@ -44,4 +44,12 @@ export class User {
             throw new Error(error);
         }
     }
+
+    changeRole = async (userId, role) => {
+        try {
+            return await this.model.findOneAndUpdate({ _id: userId }, { role }, { new:true });
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
 }

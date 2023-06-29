@@ -4,7 +4,6 @@ import __dirname from "../utils/utils.js";
 import { authentication } from "../middlewares/authentication.js";
 import { authorize } from "../middlewares/authorization.js";
 import { findAll, findOne, createProduct, updateProduct, deleteProduct, mockingProducts } from './../controllers/product.controller.js';
-import passport from "passport";
 
 const router = Router();
 

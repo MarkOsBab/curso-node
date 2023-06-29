@@ -88,9 +88,6 @@ export async function viewProduct(req, res) {
     try {
         const { productId } = req.params;
         const result = await productService.findOne(productId);
-        if(result && result.error) {
-            return apiResponser.errorResponse(res, result.error, 400);
-        }
         res.render('product', {
             product: JSON.parse(JSON.stringify(result)),
             user: req.session.user
