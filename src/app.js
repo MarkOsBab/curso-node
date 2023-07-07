@@ -17,6 +17,7 @@ import { errorMiddleware } from './middlewares/error.js';
 import { loggerMiddleware } from "./middlewares/logger.js";
 import { logger } from "./utils/logger.js";
 import cookieParser from "cookie-parser";
+import { swaggerRoute } from "./swagger.js";
 
 const app = express();
 
@@ -56,6 +57,7 @@ app.use("/api/carts", cartRouter);
 app.use("/api/sessions", sessionRouter);
 app.use("/api/restore", restoreRouter);
 app.use("/api/users", userRouter);
+swaggerRoute(app);
 
 app.get("/loggerTest", (req, res) => {
     logger.debug("This is a debug log");
