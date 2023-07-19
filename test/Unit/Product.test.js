@@ -17,6 +17,9 @@ describe("Set de pruebas del modulo de productos", () => {
     beforeEach(function() {
         mongoose.connection.collections.products.drop();
     });
+    after(function() {
+        mongoose.connection.close(true);
+    });
 
     it("El dao debe retornar productos en un array", async function() {
         const page = 1;

@@ -19,7 +19,8 @@ const config = {
     },
     server: {
         port: process.env.PORT,
-        developmentMode: process.env.DEV_MODE
+        developmentMode: process.env.DEV_MODE,
+        appUrl: process.env.APP_URL + process.env.PORT,
     },
     email: {
         user: process.env.EMAIL,

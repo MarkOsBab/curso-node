@@ -7,7 +7,7 @@ export class User {
 
     findByEmail = async (email) => {
         try {
-            return await this.model.findOne({email: email});
+            return await this.model.findOne({email});
         } catch (error) {
             throw new Error(error);
         }
