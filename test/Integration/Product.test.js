@@ -182,9 +182,19 @@ describe("Set de pruebas de integración para el módulo de productos", function
                 .field("category", productMock.category)
                 .attach("thumbnails", "./test/integration/assets/dog.jpg");
 
-            const deleteProduct = await requester.delete(`/api/products/${createProduct._body.payload._id}`);
+            const deleteProduct = await requester.delete(`/api/products/${createProduct._body.payload._id}`)
+                .set("Cookie", [`${this.cookie.name}=${this.cookie.value}`]);
 
+            expect(deleteProduct).to.be.ok;
+            expect(deleteProduct.status).to.be.equal(200);
             
+            const checkIfIsDeleted = await requester.get(`/api/products/${createProduct._body.payload._id}`)
+                .set("Cookie", [`${this.cookie.name}=${this.cookie.value}`]);
+
+
+            expect(checkIfIsDeleted._body.status).to.be.equal("Error");
+            expect(checkIfIsDeleted._body).to.have.property("error");
+            expect(checkIfIsDeleted._body.error).to.be.equal("Product error: Product does not exist");
         });
     });
     
