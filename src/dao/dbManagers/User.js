@@ -5,6 +5,14 @@ export class User {
         this.model = userModel;
     }
 
+    getAll = async (filter = {}) => {
+        try {
+            return await this.model.find(filter, {first_name: 1, last_name: 1, role: 1, email: 1, _id: 1});
+        } catch(error) {
+            throw new Error(error);
+        }
+    }
+
     findByEmail = async (email) => {
         try {
             return await this.model.findOne({email});
@@ -49,6 +57,14 @@ export class User {
         try {
             return await this.model.findOneAndUpdate({ _id: userId }, { role }, { new:true });
         } catch (error) {
+            throw new Error(error);
+        }
+    }
+
+    delete = async (date) => {
+        try {
+             return await this.model.deleteMany({ created_at: { $lte: date } });
+        } catch(error) { 
             throw new Error(error);
         }
     }

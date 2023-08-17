@@ -2,7 +2,9 @@ import { userRepository } from "./../repositories/index.js";
 import { cartService } from "./../services/index.js";
 import { isValidPassword } from "./../utils/utils.js";
 import CustomError from "./../errors/CustomError.js";
+import { notifyAccountDeleted } from "./../emails/notify.account.deleted.js";
 import { ErrorsName, ErrorsMessage, ErrorsCause } from "./../errors/enums/user.error.enum.js";
+import { sendMail } from "../utils/sendMail.js";
 
 export class UserService {
     constructor(){
@@ -117,6 +119,38 @@ export class UserService {
                 cart: data.cart
             };
             return response;
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+
+    getAll = async () => {
+        try {
+            return await this.repository.getAll();
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+
+    delete = async () => {
+        try {
+            const twoDaysBefore = new Date();
+            twoDaysBefore.setDate(twoDaysBefore.getDate() - 2);
+            const isoTwoDaysBefore = twoDaysBefore.toISOString();
+
+            const filter = { created_at: { $lte: isoTwoDaysBefore } };
+            
+            const inactiveUsers = await this.repository.getAll(filter);
+
+            for(const user of inactiveUsers) {
+                const userEmail = user.email;
+                const subject = `Notificación de inactividad de la cuenta.`;
+                const message = notifyAccountDeleted(user);
+
+                await sendMail(userEmail, subject, message);
+            }
+
+            return await this.repository.delete(isoTwoDaysBefore);
         } catch (error) {
             throw new Error(error);
         }

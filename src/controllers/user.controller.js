@@ -10,3 +10,21 @@ export async function changeRole(req, res) {
         return apiResponser.errorResponse(res, error.message);
     }
 }
+
+export async function getAll(req, res) {
+    try {
+        const result = await userService.getAll();
+        return apiResponser.successResponse(res, result);
+    } catch (error) {
+        return apiResponser.errorResponse(res, error.message);
+    }
+}
+
+export async function deleteUsers(req, res) {
+    try {
+        const result = await userService.delete();
+        return apiResponser.successResponse(res, result);
+    } catch (error) {
+        return apiResponser.errorResponse(res, error.message);
+    }
+}

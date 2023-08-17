@@ -5,6 +5,14 @@ export class UserRepository {
         this.manager = user;
     }
 
+    getAll = async (filter) => {
+        try {
+            return await this.manager.getAll(filter);
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+
     findByEmail = async (email) => {
         try {
             return await this.manager.findByEmail(email);
@@ -49,7 +57,15 @@ export class UserRepository {
         try {
             return await this.manager.changeRole(userId, role);
         } catch (error) {
-            throw new Error();
+            throw new Error(error);
+        }
+    }
+    
+    delete = async (date) => {
+        try {
+            return await this.manager.delete(date);
+        } catch (error) {
+            throw new Error(error);
         }
     }
 }

@@ -19,7 +19,18 @@ const userSchema = mongoose.Schema({
     cart: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "carts"
+    },
+    created_at: {
+        type: Date,
+        default: Date.now()
     }
+});
+
+userSchema.pre("save", function(next) {
+    if(!this.created_at) {
+        this.created_at = new Date().toISOString();
+    }
+    next();
 });
 
 const userModel = mongoose.model(userCollection, userSchema);
