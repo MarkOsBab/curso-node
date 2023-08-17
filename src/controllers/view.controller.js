@@ -170,3 +170,11 @@ export async function restorePassword(req, res) {
         return apiResponser.errorResponse(res, error.message);
     }
 }
+
+export async function manageUsers(req, res) {
+    try {
+        return res.render('manageUsers');
+    } catch (error) {
+        return apiResponser.errorResponse(res, error.message);
+    }
+}
