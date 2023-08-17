@@ -28,3 +28,14 @@ export async function deleteUsers(req, res) {
         return apiResponser.errorResponse(res, error.message);
     }
 }
+
+export async function deleteOne(req, res) {
+    try {
+        const { userId } = req.body;
+        const result = await userService.deleteOne(userId);
+
+        return apiResponser.successResponse(res, result);
+    } catch (error) {
+        return apiResponser.errorResponse(res, error.message);
+    }
+}

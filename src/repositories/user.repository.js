@@ -68,4 +68,12 @@ export class UserRepository {
             throw new Error(error);
         }
     }
+
+    deleteOne = async (id) => {
+        try {
+            return await this.manager.deleteOne(id);
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
 }

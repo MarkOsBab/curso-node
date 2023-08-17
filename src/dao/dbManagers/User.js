@@ -68,4 +68,12 @@ export class User {
             throw new Error(error);
         }
     }
+
+    deleteOne = async (id) => {
+        try {
+            return await this.model.findOneAndDelete({_id: id});
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
 }

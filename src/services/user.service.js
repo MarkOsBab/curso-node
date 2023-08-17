@@ -155,4 +155,20 @@ export class UserService {
             throw new Error(error);
         }
     }
+
+    deleteOne = async (id) => {
+        try {
+            const user = await this.repository.findById(id);
+            if(!user) {
+                CustomError.generateCustomError({
+                    name: ErrorsName.GENERAL_ERROR_NAME,
+                    message: ErrorsMessage.NOT_FOUND_MESSAGE,
+                    cause: ErrorsCause.NOT_FOUND_CAUSE,
+                });
+            }
+            return await this.repository.deleteOne(user._id);
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
 }
