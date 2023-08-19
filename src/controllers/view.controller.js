@@ -174,7 +174,7 @@ export async function restorePassword(req, res) {
 export async function manageUsers(req, res) {
     try {
         const users = await userService.getAll();
-        return res.render('manageUsers', {users: JSON.parse(JSON.stringify(users))});
+        return res.render('manageUsers', {users: JSON.parse(JSON.stringify(users)), user: req.session.user});
     } catch (error) {
         return apiResponser.errorResponse(res, error.message);
     }
