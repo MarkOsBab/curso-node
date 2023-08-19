@@ -60,4 +60,12 @@ export class ProductRepository {
         throw new Error(error);
       }
     }
+
+    findWithUserData = async (productId) => {
+      try {
+        return await this.manager.findWithUserData(productId);
+      } catch (error) {
+        throw new Error(error);
+      }
+    }
 }

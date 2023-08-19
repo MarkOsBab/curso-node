@@ -1,4 +1,6 @@
+import { notifyProductDeleted } from "../emails/notify.product.deleted.js";
 import { productRepository, userRepository } from "../repositories/index.js";
+import { sendMail } from "../utils/sendMail.js";
 import CustomError from "./../errors/CustomError.js"; 
 import { ErrorsName, ErrorsMessage, ErrorsCause } from "./../errors/enums/product.error.enum.js";
 
@@ -152,6 +154,12 @@ export class ProductService {
                         message: ErrorsMessage.USER_NOT_OWNER_MESSAGE,
                         cause: ErrorsCause.USER_NOT_OWNER_CAUSE,
                     });
+                }
+                if(existingProduct.owner !== null) {
+                    const productWithUserData = await this.productRepository.findWithUserData(id);
+                    const subject = "Se eliminó un producto que te pertenecía.";
+                    const message = notifyProductDeleted(productWithUserData);
+                    await sendMail(productWithUserData.owner.email, subject, message);
                 }
             } else {
                 CustomError.generateCustomError({

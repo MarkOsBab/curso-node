@@ -77,7 +77,17 @@ export class Product {
         const deleteProduct = await this.model.findByIdAndDelete(productId, { new: true });
         return deleteProduct;
       } catch (error) {
-        throw new Error();
+        throw new Error(error);
+      }
+    }
+
+    findWithUserData = async (productId) => {
+      try {
+        const product = await this.model.findOne({_id: productId});
+        product.owner.password = null;
+        return product;
+      } catch (error) {
+        throw new Error(error);
       }
     }
     

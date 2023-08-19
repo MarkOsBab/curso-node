@@ -33,6 +33,10 @@ const productSchema = new mongoose.Schema({
 
 productSchema.plugin(mongoosePaginate);
 
+productSchema.pre(["findOne"], function () {
+    this.populate("owner")
+});
+
 const productModel = mongoose.model(productCollection, productSchema);
 
 export { productModel };
