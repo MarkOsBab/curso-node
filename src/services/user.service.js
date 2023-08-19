@@ -108,6 +108,15 @@ export class UserService {
                 });
             }
             const role = user.role === 'user' ? user.role = 'premium' : 'user';
+
+            if(user.role === 'admin') {
+                CustomError.generateCustomError({
+                    name: ErrorsName.GENERAL_ERROR_NAME,
+                    message: ErrorsMessage.CAN_NOT_CHANGE_ROLE,
+                    cause: ErrorsCause.CAN_NOT_CHANGE_ROLE,
+                });
+            }
+            
             const data = await this.repository.changeRole(user._id, role);
             const response = {
                 _id: data._id,

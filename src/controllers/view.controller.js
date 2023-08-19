@@ -1,4 +1,4 @@
-import { productService, cartService, ticketService, restoreService } from "./../services/index.js";
+import { productService, cartService, ticketService, restoreService, userService } from "./../services/index.js";
 import { apiResponser } from "../traits/ApiResponser.js";
 import { GetProfile } from "../dao/dtos/getProfile.js";
 
@@ -173,7 +173,8 @@ export async function restorePassword(req, res) {
 
 export async function manageUsers(req, res) {
     try {
-        return res.render('manageUsers');
+        const users = await userService.getAll();
+        return res.render('manageUsers', {users: JSON.parse(JSON.stringify(users))});
     } catch (error) {
         return apiResponser.errorResponse(res, error.message);
     }
